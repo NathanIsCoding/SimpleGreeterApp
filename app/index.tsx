@@ -76,6 +76,7 @@ function Divider() {
 
 export default function Index() {
   const [name, setName] = useState('');
+  const [nameError, setNameError] = useState('');
   const [isAdditionalFamChecked, setAdditionalFamIsChecked] = useState(false);
   const [isAddressChangeChecked, setAddressChangeIsChecked] = useState(false);
   const [isEmailOrPhoneChangeChecked, setIsEmailOrPhoneChangeChecked] = useState(false);
@@ -87,6 +88,7 @@ export default function Index() {
   const handleSubmit = () => {
     if (isSubmitted) {
       setName('');
+      setNameError('');
       setAdditionalFamIsChecked(false);
       setAddressChangeIsChecked(false);
       setIsEmailOrPhoneChangeChecked(false);
@@ -95,6 +97,11 @@ export default function Index() {
       setIsPastoralCareChecked(false);
       setIsSubmitted(false);
     } else {
+      if (!name.trim()) {
+        setNameError('Please enter your name.');
+        return;
+      }
+      setNameError('');
       setIsSubmitted(true);
     }
   };
@@ -113,7 +120,7 @@ export default function Index() {
       <TextInput
         style={{
           borderWidth: 1.5,
-          borderColor: COLORS.inputBorder,
+          borderColor: nameError ? '#D45340' : COLORS.inputBorder,
           backgroundColor: COLORS.card,
           padding: 14,
           borderRadius: 10,
@@ -124,9 +131,15 @@ export default function Index() {
         placeholder="Enter your name..."
         placeholderTextColor="#B89A72"
         value={name}
-        onChangeText={setName}
+        onChangeText={(text) => {
+          setName(text);
+          if (nameError) setNameError('');
+        }}
         editable={!isSubmitted}
       />
+      {nameError ? (
+        <Text style={{ color: '#D45340', fontSize: 13, marginBottom: 8 }}>{nameError}</Text>
+      ) : null}
 
       <Divider />
 
